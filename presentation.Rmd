@@ -1,0 +1,73 @@
+---
+title: "Explore Air Quality Measurements"
+date: "2024-01-04"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+		      message=FALSE, 
+		      warning=FALSE)
+
+library(ggplot2)
+library(datasets)
+```
+
+## Introduction
+
+The task was to create a Shiny application and deploy it on Rstudio's servers.
+
+My application can be found [here](https://mk-scp.shinyapps.io/Explore_Air_Quality/).
+
+You can explore a dataset about air qualitiy measurements in New York with it.
+
+The data is taken from "airquality" of the R-package "datasets".
+
+## Functioning of the app
+
+The R-Code to plot the data looks something like:
+
+```{r simple_plot, echo = TRUE, fig.height=4}
+
+ggplot(airquality, aes(x = Ozone, y = Wind)) + geom_point()
+```
+
+## Explore the data
+
+- To explore the data and the relations between the variables you can choose the variables that are displayed.
+- If you like you can draw a linear fit line by checking the relevant box.
+- To quantify the relation the app calculates the correlation coefficient between the chosen variables. As for the fit you can show the correlation by checking a box.
+
+```{r cor_coef, echo=TRUE}
+
+cor_coef <- cor(airquality$Ozone, 
+		airquality$Wind, 
+		use = "complete.obs")
+cor_coef <- round(cor_coef, 2)
+cor_coef
+```
+
+
+## Resulting plot
+
+By checking all boxes you get plots like:
+
+```{r linear_fit, echo=FALSE}
+
+ggplot(airquality, aes(x = Ozone, y = Wind)) +
+	geom_point() +
+	geom_smooth(method = "lm",
+	      se = FALSE,
+	      color = "red") +
+	annotate(
+		"label",
+		x = 0.8 * max(airquality$Ozone, na.rm = TRUE),
+		y = 0.95 * max(airquality$Wind, na.rm = TRUE),
+		label = paste0("Correlation: ", round(cor(airquality$Ozone, airquality$Wind, use = "complete.obs"), 2)),
+		size = 7
+	)
+```
+
+
+
+
